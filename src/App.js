@@ -73,6 +73,7 @@ const App = () => {
 		}
 	};
 
+
 	/*Search Page */
 	const click_SearchPage = (event) => {
 		try {
@@ -99,7 +100,7 @@ const App = () => {
 					setSearchBooks([]);
 					setSearchPage(false);
 				} else {
-					iBookSearch(SearchValue);
+					iBookSearchWithoutShelf(SearchValue);
 				}
 			}, 1000);
 		} catch (error) {
@@ -108,17 +109,27 @@ const App = () => {
 	}
 
 	/* BookSearch */
-	const iBookSearch = async (SearchValue) => {
+	const iBookSearchWithoutShelf = async (SearchValue) => {
 		try {
-			const iBooks_SearchList = await BooksApi.search(SearchValue, 3);
+			const iBooksWithout_SearchList = await BooksApi.search(SearchValue, 3);
 
-			if (iBooks_SearchList.length > 0) {
-				let iBooks_SearchShelfList = iBookSearch_SetShelf(iBooks_SearchList);
+				
+			if (iBooksWithout_SearchList.length > 0) {
+			
+			console.log("shaymaa ***************** search resulttttttttttttttt");
+				console.log(iBooksWithout_SearchList);
+			
+			
+			
+				let iBooks_SearchShelfList = BookSearchSetShelf(iBooksWithout_SearchList);
 
-				setSearchQuery(SearchValue);
+				// console.log("iBooks_SearchShelfList resulttttttttttttttt");
+				// console.log(iBooks_SearchShelfList);
 
-				setSearchBooks(iBooks_SearchShelfList);
-				setSearchPage(true);
+				// setSearchQuery(SearchValue);
+
+				// setSearchBooks(iBooks_SearchShelfList);
+				// setSearchPage(true);
 			} else {
 				setSearchQuery(SearchValue);
 				setSearchBooks([]);
@@ -133,31 +144,58 @@ const App = () => {
 		}
 	};
 
+
+
+
 	/* Book Search and SetShelf */
-	function iBookSearch_SetShelf(iBooks_SearchList) {
+	function BookSearchSetShelf(BooksSearchList) {
 		try {
+			console.log("before shelfffffffffffffffffffffffffffffff")
+		//console.log(BooksSearchList);
+		
 			let arrBooks_SearchShelfList = [];
 
-			for (let b = 0; b < iBooks_SearchList.length; b++) {
-				Books.forEach((iBookView) => {
-					if (iBookView.id === iBooks_SearchList[b].id) {
-						console.log(iBookView);
 
-						iBooks_SearchList[b].shelf = iBookView.shelf;
-					} else {
-						iBooks_SearchList[b].shelf = "none";
-					}
-				});
-				arrBooks_SearchShelfList.push(iBooks_SearchList[b]);
+			for (let b = 0; b < BooksSearchList.length; b++) {
+				//console.log(BooksSearchList[b]);
+
+				let newBook;
+				Books.forEach((BookView) => {
+
+					if (BookView.imageLinks.smallThumbnail === BooksSearchList[b].imageLinks.smallThumbnail) {
+						console.log("stooooooop-smallThumbnail");
+						// console.log(BookView);
+						// console.log(BooksSearchList[b]);
+
+						  newBook	 = BookView;
+						  arrBooks_SearchShelfList.push(newBook);
+					}else{
+						newBook =  BooksSearchList[b];
+						newBook.shelf="XXXnone";
+					// console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");				
+						  //console.log(newBook);
+						arrBooks_SearchShelfList.push(newBook);	
+						}
+					
+
+				})
+
+				// console.log("add to arrayyyyyyyyyyyyyyyyyyyyyy");
+				// console.log(BooksSearchList[b]);
+		//		 arrBooks_SearchShelfList.push(newBook);
 			}
 
-			return arrBooks_SearchShelfList;
+			console.log("************arrBooks_SearchShelfList***************");
+		    console.log(arrBooks_SearchShelfList);
+	
+return (BooksSearchList)
+
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
-	
+
 
 	
 
