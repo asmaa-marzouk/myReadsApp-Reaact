@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import "../App.css";
 import { Link } from "react-router-dom";
 import Book from "./Book";
@@ -12,8 +12,6 @@ const BookSearch = ({
 	OnBookShelfUpdate,
 	ShowSearchList,
 	OnClick_HomePage }) => {
-
-	
 
 	return (
 		<div className="search-books">
@@ -51,7 +49,7 @@ const BookSearch = ({
 		</div>
 	);
 
-	
+
 };
 
 // PropTypes
@@ -65,7 +63,6 @@ BookSearch.propTypes = {
 	OnBookSearchQuery: PropTypes.func.isRequired,
 	OnBookShelfUpdate: PropTypes.func.isRequired,
 };
-
 
 
 export default BookSearch;

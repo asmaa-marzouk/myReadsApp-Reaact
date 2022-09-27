@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import BookShelf from "./BookShelf";
 import PropTypes from "prop-types";
 
-const Shelves = ({ iBooksList, OnBookShelfUpdate, OnClick_SearchPage }) => {
-	
+const Shelves = ({
+	iBooksList,
+	OnBookShelfUpdate,
+	OnClick_SearchPage
+}) => {
 
 	return (
 		<div className="list-books">
@@ -39,14 +42,15 @@ const Shelves = ({ iBooksList, OnBookShelfUpdate, OnClick_SearchPage }) => {
 			<div className="open-search">
 				<Link
 					to="/search"
-					onClick={OnClick_SearchPage}>
+					onClick={OnClick_SearchPage}
+					>
 					Add a book
 				</Link>
 			</div>
 		</div>
 	);
 
-	
+
 };
 
 //"PropTypes"

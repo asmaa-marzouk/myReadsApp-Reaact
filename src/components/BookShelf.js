@@ -9,14 +9,7 @@ const BookShelf = ({
     iBooksList,
     OnBookShelfUpdate }) => {
 
-    
-
     const iBookByShelfCategory = iBooksList.filter(iBook => iBook.shelf === iShelfCategory);
-
-
-
-
-
 
     return (
         <div className="bookshelf">
@@ -29,7 +22,8 @@ const BookShelf = ({
                             key={iBookView.id}
                             iBookView={iBookView}
                             OnBookShelfUpdate={OnBookShelfUpdate}
-                            blnBookShelfLine={false} />
+                            blnBookShelfLine={false}
+                            />
                     )}
 
                 </ol>
@@ -37,7 +31,7 @@ const BookShelf = ({
         </div>
     );
 
-    
+
 };
 
 //"PropTypes"

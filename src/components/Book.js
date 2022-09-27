@@ -1,10 +1,8 @@
-import React from "react";
-
 import PropTypes from "prop-types";
 
-const Book = ({ 
-    iBookView, 
-    OnBookShelfUpdate, 
+const Book = ({
+    iBookView,
+    OnBookShelfUpdate,
     blnBookShelfLine }) => {
 
 
@@ -16,7 +14,7 @@ const Book = ({
     /* getAuthor */
     const getAuthor = (iBookView) => {
         try {
-            
+
             if (iBookView.authors && iBookView.authors.length > 0) {
                 return iBookView.authors;
             } else {
@@ -31,9 +29,9 @@ const Book = ({
     const getBookImage = (iBookView) => {
         try {
             if (iBookView.imageLinks) {
-                return `url(${iBookView.imageLinks.thumbnail})`; 
+                return `url(${iBookView.imageLinks.thumbnail})`;
             } else {
-                return 'url("https://www.google.com.eg/url?sa=i&url=https%3A%2F%2Fwebpm.pro%2Fwhat-is-error-404-learn-how-to-fix-it%2F&psig=AOvVaw34DdF4_DBucfEnDKwXOunM&ust=1664120659408000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCODcv9jirfoCFQAAAAAdAAAAABAE")';
+                return 'url("https://png.pngtree.com/png-vector/20201224/ourlarge/pngtree-error-404-page-not-found-png-image_2598541.jpg")';
             }
         } catch (error) {
             console.log(error);
@@ -60,8 +58,6 @@ const Book = ({
         }
     };
 
-  
-
     return (
         <li key={iBookView.id}>
             <div className="book">
@@ -72,13 +68,15 @@ const Book = ({
                             width: 128,
                             height: 193,
                             backgroundImage: getBookImage(iBookView),
+                            backgroundPosition: "center",
+                            backgroundSize: "contain",
                         }}></div>
                     <div className="book-shelf-changer">
                         <select
                             onChange={shelfUpdate}
                             value={iBookView.shelf}>
                             <option
-                                value="none"
+                                value="asmaa"
                                 disabled>
                                 Move to...
                             </option>
@@ -112,7 +110,6 @@ Book.propTypes = {
     blnBookShelfLine: PropTypes.bool.isRequired,
     OnBookShelfUpdate: PropTypes.func.isRequired,
 };
-
 
 
 export default Book;

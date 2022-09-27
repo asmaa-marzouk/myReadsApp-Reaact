@@ -3,29 +3,21 @@ import { useEffect, useState } from "react";
 import SearchBook from "./components/BookSearch";
 import Shelves from "./components/Shelves";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import * as BooksApi from "./BooksAPI";
 
 const App = () => {
-	
-
 	const [Books, setBooks] = useState([]);
 	const [SearchBooks, setSearchBooks] = useState([]);
 	const [SearchQuery, setSearchQuery] = useState("");
 	const [SearchPage, setSearchPage] = useState(true);
 
-	
-
 	useEffect(() => {
 		try {
-			console.log("useEffect");
-
 			getBooks();
 		} catch (error) {
 			console.log(error);
 		}
-	}, []);
-
+	}, [SearchQuery]);
 
 	/* get Books from api */
 	async function getBooks() {
@@ -37,11 +29,9 @@ const App = () => {
 		}
 	}
 
-	
 	/* Home Page */
-	const click_HomePage = (event) => {
+	const click_HomePage = () => {
 		try {
-			console.log(event.currentTarget);
 			setSearchQuery("");
 			setSearchBooks([]);
 			setSearchPage(false);
@@ -51,8 +41,8 @@ const App = () => {
 	};
 
 
-	/* updatebook */
-	const updatebook = async (Books, iShelf) => {
+	/* updateBook */
+	const updateBook = async (Books, iShelf) => {
 		try {
 			if (SearchBooks.length > 0) {
 				for (let b = 0; b < SearchBooks.length; b++) {
@@ -64,6 +54,7 @@ const App = () => {
 					setSearchBooks(SearchBooks);
 				}
 			}
+
 			await BooksApi.update(Books, iShelf);
 
 			const Books_GetList = await BooksApi.getAll();
@@ -73,11 +64,9 @@ const App = () => {
 		}
 	};
 
-
 	/*Search Page */
-	const click_SearchPage = (event) => {
+	const click_SearchPage = () => {
 		try {
-			console.log(event.currentTarget);
 			setSearchQuery("");
 			setSearchBooks([]);
 			setSearchPage(true);
@@ -90,12 +79,9 @@ const App = () => {
 	function BookSearch(event) {
 		try {
 			setTimeout(() => {
-				const SearchValue = event.target.value;
-				console.log(
-					"SearchValue.trim().length == " + SearchValue.trim().length
-				);
+				const SearchValue = event.target.value.trim();
 
-				if (SearchValue.trim() === "") {
+				if (SearchValue === "") {
 					setSearchQuery("");
 					setSearchBooks([]);
 					setSearchPage(false);
@@ -113,23 +99,15 @@ const App = () => {
 		try {
 			const iBooksWithout_SearchList = await BooksApi.search(SearchValue, 3);
 
-				
 			if (iBooksWithout_SearchList.length > 0) {
-			
-			console.log("shaymaa ***************** search resulttttttttttttttt");
-				console.log(iBooksWithout_SearchList);
-			
-			
-			
-				let iBooks_SearchShelfList = BookSearchSetShelf(iBooksWithout_SearchList);
+				let iBooks_SearchShelfList = BookSearchSetShelf(
+					iBooksWithout_SearchList
+				);
 
-				// console.log("iBooks_SearchShelfList resulttttttttttttttt");
-				// console.log(iBooks_SearchShelfList);
+				setSearchQuery(SearchValue);
 
-				// setSearchQuery(SearchValue);
-
-				// setSearchBooks(iBooks_SearchShelfList);
-				// setSearchPage(true);
+				setSearchBooks(iBooks_SearchShelfList);
+				setSearchPage(true);
 			} else {
 				setSearchQuery(SearchValue);
 				setSearchBooks([]);
@@ -144,62 +122,29 @@ const App = () => {
 		}
 	};
 
-
-
-
 	/* Book Search and SetShelf */
 	function BookSearchSetShelf(BooksSearchList) {
 		try {
-			console.log("before shelfffffffffffffffffffffffffffffff")
-		//console.log(BooksSearchList);
-		
-			let arrBooks_SearchShelfList = [];
+			const arrBooks_SearchShelfList = BooksSearchList.map(searchBook => {
+				Books.forEach(book => {
+					if (book.id === searchBook.id) {
+						searchBook.shelf = book.shelf;
+					}
+				});
 
+				if (!searchBook.shelf) {
+					searchBook.shelf = "none";
+				}
 
-			for (let b = 0; b < BooksSearchList.length; b++) {
-				//console.log(BooksSearchList[b]);
+				return searchBook;
+			})
 
-				let newBook;
-				Books.forEach((BookView) => {
-
-					if (BookView.imageLinks.smallThumbnail === BooksSearchList[b].imageLinks.smallThumbnail) {
-						console.log("stooooooop-smallThumbnail");
-						// console.log(BookView);
-						// console.log(BooksSearchList[b]);
-
-						  newBook	 = BookView;
-						  arrBooks_SearchShelfList.push(newBook);
-					}else{
-						newBook =  BooksSearchList[b];
-						newBook.shelf="XXXnone";
-					// console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");				
-						  //console.log(newBook);
-						arrBooks_SearchShelfList.push(newBook);	
-						}
-					
-
-				})
-
-				// console.log("add to arrayyyyyyyyyyyyyyyyyyyyyy");
-				// console.log(BooksSearchList[b]);
-		//		 arrBooks_SearchShelfList.push(newBook);
-			}
-
-			console.log("************arrBooks_SearchShelfList***************");
-		    console.log(arrBooks_SearchShelfList);
-	
-return (BooksSearchList)
-
+			return arrBooks_SearchShelfList;
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
-
-
-	
-
-	try {
 		return (
 			<div className="app">
 				<BrowserRouter>
@@ -211,20 +156,19 @@ return (BooksSearchList)
 									BookSearchQuery={SearchQuery}
 									BooksSearchList={SearchBooks}
 									OnBookSearchQuery={BookSearch}
-									OnBookShelfUpdate={updatebook}
+									OnBookShelfUpdate={updateBook}
 									ShowSearchList={SearchPage}
 									OnClick_HomePage={click_HomePage}
 								/>
 							}
 						/>
-
 						<Route
 							exact
 							path="/"
 							element={
 								<Shelves
 									iBooksList={Books}
-									OnBookShelfUpdate={updatebook}
+									OnBookShelfUpdate={updateBook}
 									OnClick_SearchPage={click_SearchPage}
 								/>
 							}></Route>
@@ -232,10 +176,6 @@ return (BooksSearchList)
 				</BrowserRouter>
 			</div>
 		);
-	} catch (error) {
-		console.log(error);
-	}
-
 };
 
 export default App;
